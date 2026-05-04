@@ -115,3 +115,20 @@ In low-contention single-threaded use, ObjectPool is *slower* than `new/delete` 
 - **Header-only** — all template implementations live in `.h` files
 - **STL only** — no third-party dependencies
 - **Factory injection** — `ObjectPool` accepts a custom factory function (Dependency Injection pattern)
+
+## Run Tests & Demos
+
+```bash
+# 全部測試
+./build/test_lru
+./build/test_queue
+./build/test_pool
+
+# Demo
+./build/demo_lru
+./build/demo_queue
+./build/demo_pool
+
+# Benchmark
+./build/bench
+```
