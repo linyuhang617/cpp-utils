@@ -42,10 +42,15 @@ q.close();                                 // unblocks all waiting consumers
 
 ### ObjectPool\<T\>
 
-Pre-allocates objects and reuses them via RAII `PoolGuard`. Thread-safe.
+Pre-allocates objects and reuses them via RAII `PoolGuard`. Supports custom factory injection. Thread-safe.
 
 ```cpp
-ObjectPool<MyObj> pool(4);       // pre-allocate 4
+// default factory
+ObjectPool<MyObj> pool(4);
+
+// custom factory (Dependency Injection)
+ObjectPool<MyObj> pool(4, []{ return new MyObj(99); });
+
 {
     auto g = pool.acquire();     // returns PoolGuard (move-only)
     g->value = 42;
@@ -63,9 +68,19 @@ make
 
 Targets: `demo_lru`, `test_lru`, `demo_queue`, `test_queue`, `demo_pool`, `test_pool`, `bench`
 
+## Tests
+
+![tests](assets/tests.png)
+
+## Demo — ObjectPool RAII
+
+![demo_pool](assets/demo_pool.png)
+
 ## Benchmark
 
 **Environment**: Apple M1, macOS 15, Apple Clang 21, `-O2`
+
+![bench](assets/bench.png)
 
 ### LRUCache — 10M ops
 
@@ -99,3 +114,4 @@ In low-contention single-threaded use, ObjectPool is *slower* than `new/delete` 
 - **C++14 only** — no C++17 features; `std::optional` replaced by a minimal `Optional<T>` in `include/utils/Optional.h`
 - **Header-only** — all template implementations live in `.h` files
 - **STL only** — no third-party dependencies
+- **Factory injection** — `ObjectPool` accepts a custom factory function (Dependency Injection pattern)
